@@ -101,7 +101,7 @@ export default function App() {
               // make an update call to the smart contract
               await window.contract.borrow({
                 amount: Big(10)
-                  .times(10 ** 13)
+                  .times(10 ** 24)
                   .toFixed(),
               });
               await window.contract.getUser({ accountId: window.accountId });

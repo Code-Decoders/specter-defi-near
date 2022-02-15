@@ -31,16 +31,16 @@ export function lend(): void {
   }
 }
 
-export function withdraw(amount: string): void {
+export function withdraw(amount: u128): void {
   const accountId = Context.sender;
   const user = userStorage.get(accountId);
-  logging.log(`Withdrawing ${u128.from(amount)} from account "${accountId}"`);
+  logging.log(`Withdrawing ${amount} from account "${accountId}"`);
   if (user) {
     logging.log(`Sending to ${accountId}`);
-    ContractPromiseBatch.create(Context.sender).transfer(u128.from(amount));
+    ContractPromiseBatch.create(Context.sender).transfer(amount);
     userStorage.set(
       accountId,
-      new LocalStorage(u128.sub(user.totalDeposits, u128.from(amount)), user.totalBorrows)
+      new LocalStorage(u128.sub(user.totalDeposits, amount), user.totalBorrows)
     );
   } else {
     userStorage.set(accountId, new LocalStorage(u128.from(0), u128.from(0)));
@@ -48,7 +48,7 @@ export function withdraw(amount: string): void {
   let marketSize: u128 | null = storage.get<u128>("marketSize");
   if (!marketSize) marketSize = u128.from(0);
   if (marketSize) {
-    let marketCap = u128.sub(marketSize, u128.from(amount));
+    let marketCap = u128.sub(marketSize, amount);
     storage.set("marketSize", marketCap);
   }
 }
@@ -57,21 +57,24 @@ export function borrow(amount: u128): void {
   const accountId = Context.sender;
   const user = userStorage.get(accountId);
   ContractPromiseBatch.create(Context.sender).transfer(amount);
-    logging.log(`Borrowing ${amount} for account "${accountId}"`);
-  // userStorage.set(
-  //   accountId,
-  //   new LocalStorage(
-  //     user!.totalDeposits || u128.from(0),
-  //     u128.add(user!.totalBorrows || u128.from(0), u128.from(amount))
-  //   )
-  // );
-  // storage.set(
-  //   "marketSize",
-  //   u128.sub(
-  //     storage.get<u128>("marketSize")! || u128.from(0),
-  //     u128.from(amount)
-  //   )
-  // );
+  logging.log(`Borrowing ${amount} for account "${accountId}"`);
+  if (user) {
+    userStorage.set(
+      accountId,
+      new LocalStorage(user.totalDeposits, u128.add(user.totalBorrows, amount))
+    );
+  } else {
+    userStorage.set(
+      accountId,
+      new LocalStorage(u128.from(0), u128.add(u128.from(0), amount))
+    );
+  }
+  let marketSize: u128 | null = storage.get<u128>("marketSize");
+  if (!marketSize) marketSize = u128.from(0);
+  if (marketSize) {
+    let marketCap = u128.sub(marketSize, amount);
+    storage.set("marketSize", marketCap);
+  }
 }
 
 export function repay(): void {
@@ -79,24 +82,38 @@ export function repay(): void {
   const amount = Context.attachedDeposit;
   logging.log(`Repaying ${amount} from account "${accountId}"`);
   const user = userStorage.get(accountId);
-  userStorage.set(
-    accountId,
-    new LocalStorage(
-      user!.totalDeposits || u128.from(0),
-      u128.sub(user!.totalBorrows || u128.from(0), u128.from(amount))
-    )
-  );
-  storage.set(
-    "marketSize",
-    u128.add(storage.get<u128>("marketSize")! || u128.from(0), amount)
-  );
+  if (user) {
+    userStorage.set(
+      accountId,
+      new LocalStorage(user.totalDeposits, u128.sub(user.totalBorrows, amount))
+    );
+  } else {
+    userStorage.set(accountId, new LocalStorage(u128.from(0), u128.from(0)));
+  }
+  let marketSize: u128 | null = storage.get<u128>("marketSize");
+  if (!marketSize) marketSize = u128.from(0);
+  if (marketSize) {
+    let marketCap = u128.add(marketSize, amount);
+    storage.set("marketSize", marketCap);
+  }
 }
 
-export function getUser(accountId: string): void {
+export function getUser(accountId: string): LocalStorage | null {
   const user = userStorage.get(accountId);
-  if (user)
+  if (user) {
     logging.log(
       `Account "${accountId}" has ${user.totalDeposits} and ${user.totalBorrows}`
     );
-  else logging.log(`Account "${accountId}" does not exist`);
+    return user;
+  } else {
+    logging.log(`Account "${accountId}" does not exist`);
+    return null;
+  }
+}
+
+export function getMarketSize(): u128 | null {
+  let marketSize: u128 | null = storage.get<u128>("marketSize");
+  if (!marketSize) marketSize = u128.from(0);
+  // logging.log(`Market size is ${marketSize}`);
+  return marketSize;
 }
