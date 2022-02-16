@@ -32,10 +32,14 @@
     "shelljs": "~0.8.4"
   },
   "dependencies": {
+    "@uauth/js": "^1.0.0",
     "big.js": "^6.1.1",
+    "local-storage": "^2.0.0",
     "near-api-js": "~0.43.1",
-    "react": "~17.0.1",
-    "react-dom": "~17.0.1",
+    "react": "^0.14.0 || ^15.0.0 || ^16 || ^17",
+    "react-dom": "^0.14.0 || ^15.0.0 || ^16 || ^17",
+    "react-icons": "^4.3.1",
+    "react-modal": "^3.14.4",
     "regenerator-runtime": "~0.13.5"
   },
   "resolutions": {

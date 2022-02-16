@@ -1,0 +1,23 @@
+.details-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  color: black;
+  padding: 1.4vh 0;
+  justify-content: space-between;
+  border-bottom: 1px solid #e3e3e350;
+}
+
+.title-text-style {
+  font-size: 1.4vh;
+  font-weight: 600;
+  line-height: 18px;
+  text-align: left;
+}
+
+.value-text-style {
+  font-size: 1.6vh;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: right;
+}
