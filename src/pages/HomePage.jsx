@@ -5,133 +5,122 @@ import RoundedRectButton from '../components/RoundedRectButton';
 import UserDataDetails from '../components/UserDataDetails';
 import './HomePage.css';
 import { FiArrowDown, FiArrowUp } from 'react-icons/fi'
-import UnstoppableIcon from '../images/unstoppable-icon.png';
 import Loader from '../images/Spinner.gif';
 import Logo from '../images/specter.png';
 import { get } from 'local-storage'
 import AmountDialog from '../components/dialog/AmountDialog';
+import Big from 'big.js';
+import { Account } from 'near-api-js';
+import { getBalance, initContract, login, logout } from "../utils";
 
 const HomePage = () => {
+    const BOATLOAD_OF_GAS = Big(3)
+        .times(10 ** 13)
+        .toFixed();
     const [state, setState] = useState({
     });
     const [loading, setLoading] = useState(true);
 
-    const [showAmountDialog, setShowAmountDialog] = useState(false);
+    const [showAmountDialog, setShowAmountDialog] = useState({
+        show: false,
+        type: '',
+    });
 
-    const onLend = async (address, amt) => {
-        // var appArgs = [];
-        // appArgs.push(new Uint8Array(Buffer.from("lend")));
-        // console.log("appArgs1: ", appArgs)
-        // await callAppWithPayment(address, appArgs, amt)
-        // setLoading(false)
-        // action()
+    const onLend = async (amt) => {
+        try {
+            await window.contract.lend({}, BOATLOAD_OF_GAS, Big(amt).times(10 ** 24).toFixed());
+        } catch (e) {
+            alert(
+                "Something went wrong! " +
+                "Maybe you need to sign out and back in? " +
+                "Check your browser console for more info."
+            );
+        }
     }
 
 
-    const onRepay = async (address, interestAmt) => {
-        // var appArgs = [];
-        // appArgs.push(new Uint8Array(Buffer.from("repay")));
-        // console.log("appArgs1: ", appArgs)
-        // await callAppWithPayment(address, appArgs, interestAmt)
-
-        // setLoading(false)
-        // action();
+    const onRepay = async (amt) => {
+        console.log(amt)
+        try {
+            await window.contract.repay({}, BOATLOAD_OF_GAS, Big(amt).times(10 ** 24).toFixed());
+        } catch (e) {
+            alert(
+                "Something went wrong! " +
+                "Maybe you need to sign out and back in? " +
+                "Check your browser console for more info."
+            );
+        }
     }
 
-    const onWithdraw = async (address, amt) => {
-
-        // var appArgs = [];
-        // appArgs.push(new Uint8Array(Buffer.from("withdraw")));
-        // appArgs.push(utils.byteArray(amt));
-        // console.log("appArgs2: ", appArgs)
-        // await callApp(address, appArgs);
-        // setLoading(false)
-        // action()
+    const onWithdraw = async (amt) => {
+        try {
+            await window.contract.withdraw({
+                amount: Big(amt).times(10 ** 24).toFixed(),
+            }, BOATLOAD_OF_GAS);
+        } catch (e) {
+            alert(
+                "Something went wrong! " +
+                "Maybe you need to sign out and back in? " +
+                "Check your browser console for more info."
+            );
+        } finally {
+            setLoading(false);
+            init()
+        }
     }
 
-    const onBorrow = async (address, amt) => {
-
-        // var appArgs = [];
-        // appArgs.push(new Uint8Array(Buffer.from("borrow")));
-        // appArgs.push(utils.byteArray(amt));
-
-        // console.log("appArgs2: ", appArgs)
-        // await callApp(address, appArgs);
-        // setLoading(false)
-        // action()
+    const onBorrow = async (amt) => {
+        try {
+            await window.contract.borrow({
+                amount: Big(amt).times(10 ** 24).toFixed(),
+            }, BOATLOAD_OF_GAS);
+        } catch (e) {
+            alert(
+                "Something went wrong! " +
+                "Maybe you need to sign out and back in? " +
+                "Check your browser console for more info."
+            );
+        } finally {
+            setLoading(false);
+            init()
+        }
     }
 
     async function init() {
-        var state = await globalState()
+        var market_size = await window.contract.getMarketSize();
         setState(val => {
             return {
                 ...val,
-                globalState: state,
+                globalState: {
+                    market_size: market_size,
+                },
             }
         })
-        console.log('init')
-        if (get('accounts') === 'Sign In') {
-            var accts = await onSignin()
+        if (window.walletConnection.isSignedIn()) {
+            var user = await window.contract.getUser({ accountId: window.accountId });
             setState(val => {
                 return {
                     ...val,
-                    accounts: accts,
+                    localState: user
                 }
-            })
+            });
+            var balance = await getBalance();
+            console.log(balance)
+            setState(val => {
+                return {
+                    ...val,
+                    balance: balance.total
+                }
+            });
             setLoading(false);
         }
         else {
             setLoading(false)
         }
-
-    }
-
-    var action = () => {
-        if (state.accounts !== undefined) {
-            checkOptIn(state.accounts[0].address).then(
-                (result) => {
-                    if (result) {
-                        console.log('User has opted in');
-                    } else {
-                        console.log('User has not opted in');
-                        getOptInUser(state.accounts[0].address);
-                    }
-                }
-            );
-            localState(state.accounts[0].address).then(localState => {
-                setState(val => {
-                    return {
-                        ...val,
-                        localState: localState,
-                    }
-                })
-            })
-            globalState().then(globalState => {
-                setState(val => {
-                    return {
-                        ...val,
-                        globalState: globalState,
-                    }
-                })
-            })
-            balance(state.accounts[0].address).then(balance => {
-                setState(val => {
-                    return {
-                        ...val,
-                        balance: balance,
-                    }
-                })
-            })
-        }
     }
 
     useEffect(() => {
-        // action()
-    }, [state.accounts])
-
-    useEffect(() => {
-        // init()
-        // action();
+        init()
     }, [])
     return <div>
         <div className='upper-section'>
@@ -139,34 +128,23 @@ const HomePage = () => {
                 <div style={{ flex: 1, display: 'flex' }}>
                     <img className='logo' src={Logo} />
                 </div>
-                {!state.accounts && <div className='navbar-action-text' onClick={async () => {
-                    // var accts = await onSignin()
-                    // setState(val => {
-                    //     return {
-                    //         ...val,
-                    //         accounts: accts,
-                    //     }
-                    // })
-                    // globalState().then(globalState => {
-                    //     console.log("globalState: ", globalState)
-                    //     setState(val => {
-                    //         return {
-                    //             ...val,
-                    //             globalState: globalState,
-                    //         }
-                    //     })
-                    //     setLoading(false);
-                    // })
-                }}>{'Sign In'}</div>}
+                {<div className='navbar-action-text' onClick={() => {
+                    if (window.walletConnection.isSignedIn()) {
+                        logout();
+                    }
+                    else {
+                        login();
+                    }
+                }}>{!window.walletConnection.isSignedIn() ? 'Sign In' : 'Sign Out'}</div>}
             </div>
             <div className='presentation-container'>
                 <div className='glass-container' style={{ width: '375px' }}>
-                    {state.accounts && <div className='account-text-style'>Your Account</div>}
-                    {state.accounts && <div>
+                    {window.walletConnection.isSignedIn() && <div className='account-text-style'>Your Account</div>}
+                    {window.walletConnection.isSignedIn() && <div>
                         <div className='balance-text-style'>TOTAL BALANCE</div>
-                        <div className='amount-text-style'>{!state.balance ? '' : `${(state.balance / 1000000).toFixed(2)} ALGO`}</div>
+                        <div className='amount-text-style'>{!state.balance ? '' : `${(state.balance / (10 ** 24)).toFixed(2)} NEAR`}</div>
                     </div>}
-                    {state.accounts && <div className='address-text-style'>{!state.accounts ? '' : state.accounts[0].address}</div>}
+                    {window.walletConnection.isSignedIn() && <div className='address-text-style'>{!window.walletConnection.isSignedIn() ? '' : window.accountId}</div>}
                 </div>
                 <div className='glass-container' style={{ justifyContent: 'flex-start' }}>
                     <div className='account-text-style'>Interest Rates</div>
@@ -181,7 +159,7 @@ const HomePage = () => {
                         </div>
                         <div style={{ flex: 1 }}>
                             <div style={{ fontSize: '20px', color: 'var(--primary)' }}>Market Size</div>
-                            <div style={{ fontWeight: 'bold', color: 'var(--primary-light)' }}>{!state.globalState ? '' : `${(state.globalState['market_size'] / 1000000).toFixed(2)} ALGO`}</div>
+                            <div style={{ fontWeight: 'bold', color: 'var(--primary-light)' }}>{!state.globalState ? '' : `${(state.globalState['market_size'] / (10 ** 24)).toFixed(2)} NEAR`}</div>
                         </div>
                     </div>
                 </div>
@@ -191,20 +169,20 @@ const HomePage = () => {
             <div className='summary-text-style'>Summary</div>
             <div className='user-data-row'>
                 <div className='user-data-container'>
-                    <div className='heading-text'>Your ALGO Holding</div>
-                    <UserDataDetails title={'Deposited Amount'} value={!state.localState ? '' : !state.localState['total_deposits'] ? '0.00 ALGO' : `${(state.localState['total_deposits'] / 1000000).toFixed(2)} ALGO`} />
-                    <UserDataDetails title={'Interest Earned'} value={!state.localState ? '' : !state.localState['total_deposits'] ? '0.00 ALGO' : `${((state.localState['total_deposits'] / 1000000) * 0.05).toFixed(2)} ALGO`} />
-                    <UserDataDetails title={'Total Amount'} value={!state.localState ? '' : !state.localState['total_deposits'] ? '0.00 ALGO' : `${((state.localState['total_deposits'] / 1000000) + (state.localState['total_deposits'] / 1000000) * 0.05).toFixed(2)} ALGO`} />
+                    <div className='heading-text'>Your NEAR Holding</div>
+                    <UserDataDetails title={'Deposited Amount'} value={!state.localState ? '0.00 NEAR' : !state.localState['totalDeposits'] ? '0.00 NEAR' : `${(state.localState['totalDeposits'] / (10 ** 24)).toFixed(2)} NEAR`} />
+                    <UserDataDetails title={'Interest Earned'} value={!state.localState ? '0.00 NEAR' : !state.localState['totalDeposits'] ? '0.00 NEAR' : `${((state.localState['totalDeposits'] / (10 ** 24)) * 0.05).toFixed(2)} NEAR`} />
+                    <UserDataDetails title={'Total Amount'} value={!state.localState ? '0.00 NEAR' : !state.localState['totalDeposits'] ? '0.00 NEAR' : `${((state.localState['totalDeposits'] / (10 ** 24)) + (state.localState['totalDeposits'] / (10 ** 24)) * 0.05).toFixed(2)} NEAR`} />
                     <div className='user-data-action-section'>
                         <RoundedRectButton onClick={() => { setShowAmountDialog(val => { return { show: true, type: 'withdraw' } }) }} child={<FiArrowDown size={20} />} title={'Withdraw'} />
                         <RoundedRectButton onClick={() => { setShowAmountDialog(val => { return { show: true, type: 'lend' } }) }} child={<FiArrowUp size={20} />} title={'Add Funds'} />
                     </div>
                 </div>
                 <div className='user-data-container'>
-                    <div className='heading-text'>Borrowed ALGO Holding</div>
-                    <UserDataDetails title={'Borrowed Amount'} value={!state.localState ? '' : !state.localState['total_borrows'] ? '0.00 ALGO' : `${(state.localState['total_borrows'] / 1000000).toFixed(2)} ALGO`} />
-                    <UserDataDetails title={'Interest Amount'} value={!state.localState ? '' : !state.localState['total_borrows'] ? '0.00 ALGO' : `${((state.localState['total_borrows'] / 1000000) * 0.1).toFixed(2)} ALGO`} />
-                    <UserDataDetails title={'Total Amount'} value={!state.localState ? '' : !state.localState['total_borrows'] ? '0.00 ALGO' : `${((state.localState['total_borrows'] / 1000000) + (state.localState['total_borrows'] / 1000000) * 0.1).toFixed(2)} ALGO`} />
+                    <div className='heading-text'>Borrowed NEAR Holding</div>
+                    <UserDataDetails title={'Borrowed Amount'} value={!state.localState ? '0.00 NEAR' : !state.localState['totalBorrows'] ? '0.00 NEAR' : `${(state.localState['totalBorrows'] / (10 ** 24)).toFixed(2)} NEAR`} />
+                    <UserDataDetails title={'Interest Amount'} value={!state.localState ? '0.00 NEAR' : !state.localState['totalBorrows'] ? '0.00 NEAR' : `${((state.localState['totalBorrows'] / (10 ** 24)) * 0.1).toFixed(2)} NEAR`} />
+                    <UserDataDetails title={'Total Amount'} value={!state.localState ? '0.00 NEAR' : !state.localState['totalBorrows'] ? '0.00 NEAR' : `${((state.localState['totalBorrows'] / (10 ** 24)) + (state.localState['totalBorrows'] / (10 ** 24)) * 0.1).toFixed(2)} NEAR`} />
                     <div className='user-data-action-section'>
                         <RoundedRectButton onClick={() => { setShowAmountDialog(val => { return { show: true, type: 'repay' } }) }} child={<FiArrowDown size={20} />} title={'Repay'} />
                         <RoundedRectButton onClick={() => { setShowAmountDialog(val => { return { show: true, type: 'borrow' } }) }} child={<FiArrowUp size={20} />} title={'Borrow'} />
@@ -216,25 +194,25 @@ const HomePage = () => {
             showAmountDialog.show && <AmountDialog hide={() => { setShowAmountDialog(val => { return { ...val, show: false } }) }} setAmt={(amt) => {
                 setLoading(true)
                 if (showAmountDialog.type === 'withdraw') {
-                    onWithdraw(state.accounts[0].address, amt).then(
+                    onWithdraw(amt).then(
                         (result) => {
                             console.log("result: ", result);
                         }
                     )
                 } else if (showAmountDialog.type === 'lend') {
-                    onLend(state.accounts[0].address, amt).then(
+                    onLend(amt).then(
                         (result) => {
                             console.log("result: ", result)
                         }
                     )
                 } else if (showAmountDialog.type === 'repay') {
-                    onRepay(state.accounts[0].address, parseInt(amt + (amt * 0.1) - 1000)).then(
+                    onRepay(Big(amt).add(amt * 0.1).toNumber()).then(
                         (result) => {
                             console.log("result: ", result)
                         }
                     )
                 } else if (showAmountDialog.type === 'borrow') {
-                    onBorrow(state.accounts[0].address, amt).then(
+                    onBorrow(amt).then(
                         (result) => {
                             console.log("result: ", result)
                         }

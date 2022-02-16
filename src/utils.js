@@ -1,4 +1,5 @@
-import { connect, Contract, keyStores, WalletConnection } from "near-api-js";
+import { Account, connect, Connection, Contract, keyStores, Near, WalletConnection } from "near-api-js";
+import { JsonRpcProvider } from "near-api-js/lib/providers";
 import getConfig from "./config";
 
 const nearConfig = getConfig(process.env.NODE_ENV || "development");
@@ -26,11 +27,22 @@ export async function initContract() {
     nearConfig.contractName,
     {
       // View methods are read only. They don't modify the state, but usually return some value.
-      viewMethods: ["getUser"],
+      viewMethods: ["getUser", "getMarketSize", 'getAccountBalance'],
       // Change methods can modify the state. But you don't receive the returned value when called.
       changeMethods: ["lend", "repay", "withdraw", "borrow"],
     }
   );
+}
+
+export async function getBalance() {
+  const near = await connect(
+    Object.assign(
+      { deps: { keyStore: new keyStores.BrowserLocalStorageKeyStore() } },
+      nearConfig
+    )
+  );
+
+  return (await near.account('kunal528.testnet')).getAccountBalance().then(val => val);
 }
 
 export function logout() {

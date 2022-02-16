@@ -1,3 +1,4 @@
+import Big from 'big.js';
 import React from 'react';
 import Modal from 'react-modal/lib/components/Modal';
 import './AmountDialog.css';
@@ -12,7 +13,8 @@ const AmountDialog = ({ hide, setAmt }) => {
             <h3 style={{ color: 'var(--primary)' }}>Enter Amount</h3>
             <input type={'number'} className='dialog-input' value={amount} onChange={(event) => { setAmount(event.currentTarget.value) }} />
             <div className='dialog-button-container' onClick={() => {
-                setAmt(parseFloat(amount) * 1000000);
+                console.log(amount);
+                setAmt(amount);
                 hide();
             }}>Submit</div>
         </div>
