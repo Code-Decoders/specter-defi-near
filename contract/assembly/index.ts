@@ -3,6 +3,7 @@ import {
   logging,
   storage,
   u128,
+  util,
   ContractPromiseBatch,
 } from "near-sdk-as";
 import { LocalStorage, userStorage } from "./model";
@@ -13,6 +14,8 @@ const DEPOSIT_APY = u128.from(0.05);
 export function lend(): void {
   const accountId = Context.sender;
   const amount = Context.attachedDeposit;
+  assert(amount.pos(), "amount must be greater than 0");
+
   logging.log(`Lending ${amount} to account "${accountId}"`);
   const user = userStorage.get(accountId);
   if (user) {
@@ -35,9 +38,10 @@ export function withdraw(amount: u128): void {
   const accountId = Context.sender;
   const user = userStorage.get(accountId);
   logging.log(`Withdrawing ${amount} from account "${accountId}"`);
+  const amountWithInterest = u128.add(amount, u128.mul(amount, DEPOSIT_APY));
   if (user) {
     logging.log(`Sending to ${accountId}`);
-    ContractPromiseBatch.create(Context.sender).transfer(amount);
+    ContractPromiseBatch.create(Context.sender).transfer(amountWithInterest);
     userStorage.set(
       accountId,
       new LocalStorage(u128.sub(user.totalDeposits, amount), user.totalBorrows)
@@ -48,7 +52,7 @@ export function withdraw(amount: u128): void {
   let marketSize: u128 | null = storage.get<u128>("marketSize");
   if (!marketSize) marketSize = u128.from(0);
   if (marketSize) {
-    let marketCap = u128.sub(marketSize, amount);
+    let marketCap = u128.sub(marketSize, amountWithInterest);
     storage.set("marketSize", marketCap);
   }
 }
@@ -81,6 +85,7 @@ export function repay(): void {
   const accountId = Context.sender;
   const amount = Context.attachedDeposit;
   logging.log(`Repaying ${amount} from account "${accountId}"`);
+  const originalAmount = u128.div(amount, u128.add(u128.from(1), BORROW_APY));
   const user = userStorage.get(accountId);
   if (user) {
     userStorage.set(
@@ -93,7 +98,7 @@ export function repay(): void {
   let marketSize: u128 | null = storage.get<u128>("marketSize");
   if (!marketSize) marketSize = u128.from(0);
   if (marketSize) {
-    let marketCap = u128.add(marketSize, amount);
+    let marketCap = u128.add(marketSize, originalAmount);
     storage.set("marketSize", marketCap);
   }
 }
