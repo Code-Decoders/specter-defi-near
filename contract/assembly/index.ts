@@ -8,9 +8,9 @@ import {
 } from "near-sdk-as";
 import { LocalStorage, userStorage } from "./model";
 
-const NEAR = u128.from("1000000000000000000000000");
-const BORROW_APY = u128.mul(u128.from(0.1), NEAR);
-const DEPOSIT_APY = u128.mul(u128.from(0.05), NEAR);
+const NEAR = u128.from(10000);
+const BORROW_APY = u128.from(1000);
+const DEPOSIT_APY = u128.from(500);
 
 export function lend(): void {
   const accountId = Context.sender;
@@ -42,8 +42,6 @@ export function withdraw(amount: u128): void {
     amount,
     u128.div(u128.mul(amount, DEPOSIT_APY), NEAR)
   );
-  const interest = u128.div(u128.mul(amount, DEPOSIT_APY), NEAR);
-  logging.log(`Interest earned ${interest}"`);
   logging.log(`Withdrawing ${amountWithInterest} from account "${accountId}"`);
   if (user) {
     logging.log(`Sending to ${accountId}`);
@@ -92,14 +90,15 @@ export function repay(): void {
   const amount = Context.attachedDeposit;
   logging.log(`Repaying ${amount} from account "${accountId}"`);
   const originalAmount = u128.div(
-    amount,
+    u128.mul(amount, NEAR),
     u128.add(u128.from(NEAR), BORROW_APY)
   );
+  logging.log(`Original amount ${originalAmount}`);
   const user = userStorage.get(accountId);
   if (user) {
     userStorage.set(
       accountId,
-      new LocalStorage(user.totalDeposits, u128.sub(user.totalBorrows, amount))
+      new LocalStorage(user.totalDeposits, u128.sub(user.totalBorrows, originalAmount))
     );
   } else {
     userStorage.set(accountId, new LocalStorage(u128.from(0), u128.from(0)));
