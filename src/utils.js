@@ -42,7 +42,7 @@ export async function getBalance() {
     )
   );
 
-  return (await near.account('kunal528.testnet')).getAccountBalance().then(val => val);
+  return (await near.account(window.accountId)).getAccountBalance().then(val => val);
 }
 
 export function logout() {
