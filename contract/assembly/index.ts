@@ -25,7 +25,10 @@ export function lend(): void {
       new LocalStorage(u128.add(user.totalDeposits, amount), user.totalBorrows)
     );
   } else {
-    userStorage.set(accountId, new LocalStorage(u128.from(0), u128.from(0)));
+    userStorage.set(
+      accountId,
+      new LocalStorage(u128.add(u128.from(0), amount), u128.from(0))
+    );
   }
   let marketSize: u128 | null = storage.get<u128>("marketSize");
   if (!marketSize) marketSize = u128.from(0);
@@ -98,7 +101,10 @@ export function repay(): void {
   if (user) {
     userStorage.set(
       accountId,
-      new LocalStorage(user.totalDeposits, u128.sub(user.totalBorrows, originalAmount))
+      new LocalStorage(
+        user.totalDeposits,
+        u128.sub(user.totalBorrows, originalAmount)
+      )
     );
   } else {
     userStorage.set(accountId, new LocalStorage(u128.from(0), u128.from(0)));
@@ -106,7 +112,7 @@ export function repay(): void {
   let marketSize: u128 | null = storage.get<u128>("marketSize");
   if (!marketSize) marketSize = u128.from(0);
   if (marketSize) {
-    let marketCap = u128.add(marketSize, originalAmount);
+    let marketCap = u128.add(marketSize, amount);
     storage.set("marketSize", marketCap);
   }
 }
