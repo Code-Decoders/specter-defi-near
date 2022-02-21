@@ -1,6 +1,6 @@
 ![https://specter-defi.netlify.app/](https://user-images.githubusercontent.com/22388017/153361113-e692b046-dbcc-4d61-b430-394a18f7f019.png)
 
-> WARNING: This project is for testing purposes only, this is not by any means is a production-level code. For our future plans please visit our [Future Roadmap](https://github.com/Code-Decoders/algorant-defi-app#future-roadmap).
+> WARNING: This project is for testing purposes only, this is not by any means is a production-level code. For our future plans please visit our [Future Roadmap](https://github.com/Code-Decoders/specter-defi-near/blob/master/README.md#future-roadmap).
 
 ### Checkout Specter DeFi by visiting:
 ### https://specter-near.netlify.app
