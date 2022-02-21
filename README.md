@@ -8,8 +8,8 @@
 ---
 
 ### `Project Overview:`
-Just like conventional peer–to–peer lending and borrowing platforms, Specter DeFi facilitates its users to lend their ALGO to others and borrow it from the protocol pool.
-In exchange, the lender gets interest payments. Specter DeFi operates without any middlemen, hence, the financial rewards are sent straight away to the users. The best thing about using Specter DeFi is that the users don’t ever need to disclose their identity, and still borrow or lend ALGOs.
+Just like conventional peer–to–peer lending and borrowing platforms, Specter DeFi facilitates its users to lend their Near to others and borrow it from the protocol pool.
+In exchange, the lender gets interest payments. Specter DeFi operates without any middlemen, hence, the financial rewards are sent straight away to the users. The best thing about using Specter DeFi is that the users don’t ever need to disclose their identity, and still borrow or lend Nears.
 
 ### For more details please check out the complete walkthrough here,
 
