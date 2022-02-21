@@ -40,14 +40,14 @@ Note: Since this is still an in-development project, we do not take any collater
 
 ### `Steps to run the project`
 After downloading and opening code in your IDE,
+### `Step 0:`
+```npm install --global near-cli```
+
 ### `Step 1:`
 Create a [testnet-account](https://docs.near.org/docs/develop/basics/create-account#creating-a-testnet-account) here.
 
-### `Step 5:`
-run `npm i` in the terminal.
-
-### `Step 6:`
-run `npm start`.
+### `Step 3:`
+run `npm run dev` in the terminal.
 
 ---
 
