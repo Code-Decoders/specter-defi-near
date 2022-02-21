@@ -1,102 +1,82 @@
-specter
-==================
+![https://specter-defi.netlify.app/](https://user-images.githubusercontent.com/22388017/153361113-e692b046-dbcc-4d61-b430-394a18f7f019.png)
 
-This [React] app was initialized with [create-near-app]
+> WARNING: This project is for testing purposes only, this is not by any means is a production-level code. for our future plans please visit our [Future Roadmap](https://github.com/Code-Decoders/algorant-defi-app#future-roadmap).
 
+### Checkout Specter DeFi by visiting:
+### https://specter-defi.netlify.app/
+###### Special instructions: Please make sure to run this website on [google chrome](https://www.google.com/chrome/?brand=FHFK&gclid=Cj0KCQiAjJOQBhCkARIsAEKMtO340I7QAqj4f4aqz66DT7Ow74cSK-4a0zoFKXNDQHJWcXr0xeji5soaAvXlEALw_wcB&gclsrc=aw.ds) and you have the [Algosigner](https://www.purestake.com/technology/algosigner/) extension installed.
 
-Quick Start
-===========
+---
 
-To run this project locally:
+### `Project Overview:`
+Just like conventional peer–to–peer lending and borrowing platforms, Specter DeFi facilitates its users to lend their ALGO to others and borrow it from the protocol pool.
+In exchange, the lender gets interest payments. Specter DeFi operates without any middlemen, hence, the financial rewards are sent straight away to the users. The best thing about using Specter DeFi is that the users don’t ever need to disclose their identity, and still borrow or lend ALGOs.
 
-1. Prerequisites: Make sure you've installed [Node.js] ≥ 12
-2. Install dependencies: `yarn install`
-3. Run the local development server: `yarn dev` (see `package.json` for a
-   full list of `scripts` you can run with `yarn`)
-
-Now you'll have a local development environment backed by the NEAR TestNet!
-
-Go ahead and play with the app and the code. As you make code changes, the app will automatically reload.
+### For more details please check out the complete walkthrough here,
 
 
-Exploring The Code
-==================
 
-1. The "backend" code lives in the `/contract` folder. See the README there for
-   more info.
-2. The frontend code lives in the `/src` folder. `/src/index.html` is a great
-   place to start exploring. Note that it loads in `/src/index.js`, where you
-   can learn how the frontend connects to the NEAR blockchain.
-3. Tests: there are different kinds of tests for the frontend and the smart
-   contract. See `contract/README` for info about how it's tested. The frontend
-   code gets tested with [jest]. You can run both of these at once with `yarn
-   run test`.
+https://user-images.githubusercontent.com/22388017/154958727-1b1f15a1-285a-4024-8e1e-73cadf1c6635.mp4
 
 
-Deploy
-======
 
-Every smart contract in NEAR has its [own associated account][NEAR accounts]. When you run `yarn dev`, your smart contract gets deployed to the live NEAR TestNet with a throwaway account. When you're ready to make it permanent, here's how.
+---
 
+### `How does Specter DeFi  work?`
+1. Lending:
+The lender sends a lending request to the smart contract and then those funds get stored in the blockchain with the contract. When the lender wishes to withdraw his funds, he can send a withdrawal request to the contract and receive the funds with the interest rewards.
+2. Borrowing:
+The borrowers send a borrow request to the smart contract and those funds are transferred to the user in return. The user can repay the funds by sending a repay request, but this time the user would also have to provide the payment with the interest added.
+Note: Since this is still an in-development project, we do not take any collateral, when providing funds to the borrow, this would be added in the future.
 
-Step 0: Install near-cli (optional)
--------------------------------------
+---
 
-[near-cli] is a command line interface (CLI) for interacting with the NEAR blockchain. It was installed to the local `node_modules` folder when you ran `yarn install`, but for best ergonomics you may want to install it globally:
+### `Tech Stack`
+* React JS (Frontend)
+* PyTeal (Smart Contract)
+* AlgoSigner (Signing Transactions)
+* AlgoSdk (Interact with the blockchain)
+* UnstoppableDomains SDK (Sign-In)
+* Figma (UI Design)
 
-    yarn install --global near-cli
+--- 
 
-Or, if you'd rather use the locally-installed version, you can prefix all `near` commands with `npx`
-
-Ensure that it's installed with `near --version` (or `npx near --version`)
-
-
-Step 1: Create an account for the contract
-------------------------------------------
-
-Each account on NEAR can have at most one contract deployed to it. If you've already created an account such as `your-name.testnet`, you can deploy your contract to `specter.your-name.testnet`. Assuming you've already created an account on [NEAR Wallet], here's how to create `specter.your-name.testnet`:
-
-1. Authorize NEAR CLI, following the commands it gives you:
-
-      near login
-
-2. Create a subaccount (replace `YOUR-NAME` below with your actual account name):
-
-      near create-account specter.YOUR-NAME.testnet --masterAccount YOUR-NAME.testnet
+### `Steps to run the project`
+After downloading and opening code in your IDE,
+### `Step 1:`
+Make sure to add [Algosigner](https://www.purestake.com/technology/algosigner/) extension in chrome browser.
 
 
-Step 2: set contract name in code
----------------------------------
+### `Step 2:`
+Then get your ```API SECRET``` by taping on [this button](https://developer.purestake.io/signup) and following instructions there.
 
-Modify the line in `src/config.js` that sets the account name of the contract. Set it to the account id you used above.
+![image](https://user-images.githubusercontent.com/22388017/153376786-7e921cc5-0593-4323-ab3f-0ad6f6813670.png)
 
-    const CONTRACT_NAME = process.env.CONTRACT_NAME || 'specter.YOUR-NAME.testnet'
+### `Step 3:`
+Open ```contract_adaptor.js``` and put ```API SECRET``` you are provided from Algosigner, on lines [number 8](https://github.com/Code-Decoders/specter-defi-algo/blob/dda90b8a0640f59d33cc26cb0d66fd3175ccc7c8/src/adaptor/contract_adaptor.js#L8).
 
+![image](https://user-images.githubusercontent.com/22388017/153430779-1ac90920-69e4-4672-80f6-ff1d1a374811.png)
 
-Step 3: deploy!
----------------
+### `Step 4:`
+Follow the [@uauth/js](https://www.npmjs.com/package/@uauth/js) documentation and get ```CLIENT_ID```, ```CLIENT_SECRET``` and a ```REDIRECT_URI```. Once you have these values, open ```HomePage.jsx``` replace on lines [18, 19, 20](https://github.com/Code-Decoders/specter-defi-algo/blob/dbf23c3ddc60c65ee288b7a7b3c04356f852b009/src/pages/HomePage.jsx#L17) respectively.
 
-One command:
+![image](https://user-images.githubusercontent.com/22388017/153379642-ef776495-229c-4929-a899-f1fbe24060a4.png)
 
-    yarn deploy
+### `Step 5:`
+run `npm i` in the terminal.
 
-As you can see in `package.json`, this does two things:
+### `Step 6:`
+run `npm start`.
 
-1. builds & deploys smart contract to NEAR TestNet
-2. builds & deploys frontend code to GitHub using [gh-pages]. This will only work if the project already has a repository set up on GitHub. Feel free to modify the `deploy` script in `package.json` to deploy elsewhere.
+---
 
+### `Future Roadmap`
+We Planning to add the following features in the future,
 
-Troubleshooting
-===============
+* Dynamic APY calculations with respect to demand and supply of Algos in the market.
+* Network token for lenders.
+* Collateral is taken from the borrowers to ensure the protection of lenders.
 
-On Windows, if you're seeing an error containing `EPERM` it may be related to spaces in your path. Please see [this issue](https://github.com/zkat/npx/issues/209) for more details.
+---
 
-
-  [React]: https://reactjs.org/
-  [create-near-app]: https://github.com/near/create-near-app
-  [Node.js]: https://nodejs.org/en/download/package-manager/
-  [jest]: https://jestjs.io/
-  [NEAR accounts]: https://docs.near.org/docs/concepts/account
-  [NEAR Wallet]: https://wallet.testnet.near.org/
-  [near-cli]: https://github.com/near/near-cli
-  [gh-pages]: https://github.com/tschaub/gh-pages
+# Thank you for making it this far, have a good day! :coffee:
