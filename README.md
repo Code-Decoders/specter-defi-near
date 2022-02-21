@@ -3,7 +3,7 @@
 > WARNING: This project is for testing purposes only, this is not by any means is a production-level code. for our future plans please visit our [Future Roadmap](https://github.com/Code-Decoders/algorant-defi-app#future-roadmap).
 
 ### Checkout Specter DeFi by visiting:
-### https://specter-defi.netlify.app/
+### https://specter-near.netlify.app
 ###### Special instructions: Please make sure to run this website on [google chrome](https://www.google.com/chrome/?brand=FHFK&gclid=Cj0KCQiAjJOQBhCkARIsAEKMtO340I7QAqj4f4aqz66DT7Ow74cSK-4a0zoFKXNDQHJWcXr0xeji5soaAvXlEALw_wcB&gclsrc=aw.ds) and you have the [Algosigner](https://www.purestake.com/technology/algosigner/) extension installed.
 
 ---
