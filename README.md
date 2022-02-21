@@ -33,10 +33,8 @@ Note: Since this is still an in-development project, we do not take any collater
 
 ### `Tech Stack`
 * React JS (Frontend)
-* PyTeal (Smart Contract)
-* AlgoSigner (Signing Transactions)
-* AlgoSdk (Interact with the blockchain)
-* UnstoppableDomains SDK (Sign-In)
+* AssemblyScript (Smart Contract)
+* Near Account (Signing Transactions)
 * Figma (UI Design)
 
 --- 
