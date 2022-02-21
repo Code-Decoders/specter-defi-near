@@ -4,7 +4,6 @@
 
 ### Checkout Specter DeFi by visiting:
 ### https://specter-near.netlify.app
-###### Special instructions: Please make sure to run this website on [google chrome](https://www.google.com/chrome/?brand=FHFK&gclid=Cj0KCQiAjJOQBhCkARIsAEKMtO340I7QAqj4f4aqz66DT7Ow74cSK-4a0zoFKXNDQHJWcXr0xeji5soaAvXlEALw_wcB&gclsrc=aw.ds) and you have the [Algosigner](https://www.purestake.com/technology/algosigner/) extension installed.
 
 ---
 
