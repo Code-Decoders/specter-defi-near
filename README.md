@@ -32,7 +32,7 @@ Note: Since this is still an in-development project, we do not take any collater
 
 ### `Tech Stack`
 * React JS (Frontend)
-* AssemblyScript (Smart Contract)
+* near-sdk-as (Smart Contract)
 * Near Account (Signing Transactions)
 * Figma (UI Design)
 
@@ -41,23 +41,7 @@ Note: Since this is still an in-development project, we do not take any collater
 ### `Steps to run the project`
 After downloading and opening code in your IDE,
 ### `Step 1:`
-Make sure to add [Algosigner](https://www.purestake.com/technology/algosigner/) extension in chrome browser.
-
-
-### `Step 2:`
-Then get your ```API SECRET``` by taping on [this button](https://developer.purestake.io/signup) and following instructions there.
-
-![image](https://user-images.githubusercontent.com/22388017/153376786-7e921cc5-0593-4323-ab3f-0ad6f6813670.png)
-
-### `Step 3:`
-Open ```contract_adaptor.js``` and put ```API SECRET``` you are provided from Algosigner, on lines [number 8](https://github.com/Code-Decoders/specter-defi-algo/blob/dda90b8a0640f59d33cc26cb0d66fd3175ccc7c8/src/adaptor/contract_adaptor.js#L8).
-
-![image](https://user-images.githubusercontent.com/22388017/153430779-1ac90920-69e4-4672-80f6-ff1d1a374811.png)
-
-### `Step 4:`
-Follow the [@uauth/js](https://www.npmjs.com/package/@uauth/js) documentation and get ```CLIENT_ID```, ```CLIENT_SECRET``` and a ```REDIRECT_URI```. Once you have these values, open ```HomePage.jsx``` replace on lines [18, 19, 20](https://github.com/Code-Decoders/specter-defi-algo/blob/dbf23c3ddc60c65ee288b7a7b3c04356f852b009/src/pages/HomePage.jsx#L17) respectively.
-
-![image](https://user-images.githubusercontent.com/22388017/153379642-ef776495-229c-4929-a899-f1fbe24060a4.png)
+Create a [testnet-account](https://docs.near.org/docs/develop/basics/create-account#creating-a-testnet-account) here.
 
 ### `Step 5:`
 run `npm i` in the terminal.
