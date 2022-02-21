@@ -51,4 +51,4 @@ run `npm run dev` in the terminal.
 
 ---
 
-# Thank you for making it this far, have a good day! :coffee:
+# Thats all!!! have a good day! :coffee:
