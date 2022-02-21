@@ -1,6 +1,6 @@
 ![https://specter-defi.netlify.app/](https://user-images.githubusercontent.com/22388017/153361113-e692b046-dbcc-4d61-b430-394a18f7f019.png)
 
-> WARNING: This project is for testing purposes only, this is not by any means is a production-level code. for our future plans please visit our [Future Roadmap](https://github.com/Code-Decoders/algorant-defi-app#future-roadmap).
+> WARNING: This project is for testing purposes only, this is not by any means is a production-level code.
 
 ### Checkout Specter DeFi by visiting:
 ### https://specter-near.netlify.app
@@ -65,15 +65,6 @@ run `npm i` in the terminal.
 
 ### `Step 6:`
 run `npm start`.
-
----
-
-### `Future Roadmap`
-We Planning to add the following features in the future,
-
-* Dynamic APY calculations with respect to demand and supply of Algos in the market.
-* Network token for lenders.
-* Collateral is taken from the borrowers to ensure the protection of lenders.
 
 ---
 
