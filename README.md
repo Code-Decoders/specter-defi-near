@@ -4,7 +4,7 @@
 
 ### Checkout Specter DeFi by visiting:
 ### https://specter-near.netlify.app
-
+> Special instructions: Please make sure you have a [Near Testnet Account](https://docs.near.org/docs/develop/basics/create-account#creating-a-testnet-account)
 ---
 
 ### `Project Overview:`
