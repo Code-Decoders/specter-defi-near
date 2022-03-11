@@ -54,7 +54,7 @@ run `npm run dev` in the terminal.
 ### `Future Roadmap`
 We Planning to add the following features in the future,
 
-* Dynamic APY calculations with respect to demand and supply of Algos in the market.
+* Dynamic APY calculations with respect to demand and supply of NEAR in the market.
 * Network token for lenders.
 * Collateral is taken from the borrowers to ensure the protection of lenders.
 
